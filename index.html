@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>The MystiMaze</title>
+    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="icon" type="image/x-icon" href="utils/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="manifest.json">
+    <meta name="description" content="A simple yet fun game to play when you're bored.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="The MystiMaze - A Fun Game to Play When You're Bored" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta http-equiv="content-language" content="en" />
+    <meta property="og:description" content="A simple yet fun game to play when you're bored." />
+    <meta property="og:site_name" content="The MystiMaze" />
+    <meta name="language" content="en">
+    <meta name="theme-color" content="#000000">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+</head>
+
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-CZ3YJF00CG');
+</script>
+
+<body>
+    <div id="homeScreen" class="home-screen desktop-home">
+        <div class="home-box">
+            <h1 class="game-title">🧩 The MystiMaze</h1>
+            <p class="game-subtitle">A simple yet fun game to play when you're bored.</p>
+            <div class="score-display" style="margin-top: 10px">
+                <p id="scoreEasy">Easy Score: 0</p>
+                <p id="scoreMedium">Medium Score: 0</p>
+                <p id="scoreHard">Hard Score: 0</p>
+            </div>
+
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn" data-level="easy">🎯 Easy</button>
+                <button class="difficulty-btn" data-level="medium">⚔️ Medium</button>
+                <button class="difficulty-btn" data-level="hard">💀 Hard</button>
+            </div>
+            <button id="aboutGame" class="about-button" onclick="window.location.href='src/html/about.html'">ℹ️
+                About</button>
+        </div>
+    </div>
+
+
+    <div id="gameScreen" class="game-container" style="display: none;">
+        <header>
+            <h1>The MystiMaze</h1>
+            <p id="currentDifficulty">Difficulty: Easy</p>
+            <p id="gameLifetimeScore" style="font-weight: bold">Total Score: 0</p>
+        </header>
+        <canvas id="mazeCanvas"></canvas>
+        <div class="controls">
+            <p style="color: white"><strong>Controls</strong></p>
+            <button id="moveUp" style="font: inherit; cursor: pointer">Up</button>
+            <div class="horizontal-controls">
+                <button id="moveLeft" style="font: inherit; cursor: pointer">Left</button>
+                <button id="moveDown" style="font: inherit; cursor: pointer">Down</button>
+                <button id="moveRight" style="font: inherit; cursor: pointer">Right</button>
+            </div>
+        </div>
+        <button id="regenerateMaze" style="margin-top: 25px">Regenerate Maze</button>
+        <button id="backToHome" style="margin-top: 25px; margin-bottom: 200px">Back to Home</button>
+    </div>
+
+    <div id="gameModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 id="modalTitle">Title</h2>
+            <p id="modalMessage">Message goes here.</p>
+            <button id="modalOkBtn">OK</button>
+        </div>
+    </div>
+
+
+    <script src="src/js/game.js"></script>
+</body>
+
+</html>
