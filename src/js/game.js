@@ -162,3 +162,180 @@ while (countFreeNeighbors(0, 0) < 2 && safetyCount < 50) {
         }
     }
 }
+
+// Maze generation using recursive backtracking
+function carvePassagesFrom(x, y) {
+    const directions = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1]
+    ];
+
+    directions.sort(() => Math.random() - 0.5);
+
+    for (const [dx, dy] of directions) {
+        const nx = x + dx * 2;
+        const ny = y + dy * 2;
+
+        if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && maze[ny][nx] === 1) {
+            maze[y + dy][x + dx] = 0;
+            maze[ny][nx] = 0;
+            carvePassagesFrom(nx, ny);
+        }
+    }
+}
+
+// Start the game with selected difficulty
+function startGame() {
+    homeScreen.style.display = 'none';
+    gameScreen.style.display = 'flex';
+    
+    initGame();
+    draw();
+    
+    // Set monster movement interval based on difficulty
+    clearInterval(monsterInterval);
+    monsterInterval = setInterval(moveMonster, difficulties[currentDifficulty].monsterSpeed);
+    
+    // Play background music
+    if (!bgStarted) {
+        bgMusic.play().catch(e => console.warn("Autoplay ditolak:", e));
+        bgStarted = true;
+    }
+}
+
+// Move monster toward player using BFS
+function moveMonster() {
+    const path = bfs(monster, player);
+    if (path.length > 1) {
+        monster.x = path[1].x;
+        monster.y = path[1].y;
+    }
+
+    if (monster.x === player.x && monster.y === player.y) {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    bgStarted = false; // RESET
+
+    gameOverSound.play();
+    alert("Game Over! You were caught by the monster!");
+    
+    gameScreen.style.display = 'none';
+    homeScreen.style.display = 'flex';
+    clearInterval(monsterInterval);
+    }
+}
+
+// Breadth-First Search for monster pathfinding
+function bfs(start, end) {
+    const queue = [[start]];
+    const visited = Array(rows).fill().map(() => Array(cols).fill(false));
+    visited[start.y][start.x] = true;
+
+    while (queue.length > 0) {
+        const path = queue.shift();
+        const { x, y } = path[path.length - 1];
+
+        if (x === end.x && y === end.y) return path;
+
+        const directions = [[0,1],[1,0],[0,-1],[-1,0]];
+        for (const [dx, dy] of directions) {
+            const nx = x + dx;
+            const ny = y + dy;
+
+            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && maze[ny][nx] === 0 && !visited[ny][nx]) {
+                visited[ny][nx] = true;
+                queue.push([...path, {x: nx, y: ny}]);
+            }
+        }
+    }
+
+    return [start]; // fallback
+}
+
+// Drawing functions
+function drawMaze() {
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            ctx.fillStyle = maze[y][x] === 1 ? 'black' : 'white';
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+    }
+}
+
+function drawPlayer() {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x * cellSize + (cellSize - player.size) / 2, player.y * cellSize + (cellSize - player.size) / 2, player.size, player.size);
+    ctx.fillText("🧝🏼‍♂", player.x * cellSize + cellSize / 2, player.y * cellSize + cellSize / 2);
+}
+
+function drawMonster() {
+    ctx.font = `${cellSize}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("👾", monster.x * cellSize + cellSize / 2, monster.y * cellSize + cellSize / 2);
+}
+
+function drawExit() {
+    ctx.fillStyle = exit.color;
+    ctx.fillRect(exit.x * cellSize, exit.y * cellSize, exit.size, exit.size);
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMaze();
+    drawPlayer();
+    drawMonster();
+    drawExit();
+    requestAnimationFrame(draw);
+}
+
+// Player movement
+function movePlayer(dx, dy) {
+    if (!bgStarted) {
+        bgMusic.play().catch(e => console.warn("Autoplay ditolak:", e));
+        bgStarted = true;
+    }
+    
+    const newX = player.x + dx;
+    const newY = player.y + dy;
+    
+    if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && !checkCollision(newX, newY)) {
+        player.x = newX;
+        player.y = newY;
+
+        // Play step sound
+        langkahSound.currentTime = 0;
+        langkahSound.play().catch(e => console.warn("Gagal memainkan langkahSound:", e));
+        
+        checkWin();
+    }
+}
+
+function checkCollision(x, y) {
+    return maze[y][x] === 1;
+}
+
+// Win condition
+function checkWin() {
+    if (player.x === exit.x && player.y === exit.y) {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        bgStarted = false;
+
+        victorySound.play();
+
+        const key = `score_${currentDifficulty}`;
+        const currentScore = parseInt(localStorage.getItem(key)) || 0;
+        localStorage.setItem(key, currentScore + 1);
+        
+        updateScoreDisplay();
+        
+        alert(`Congratulations, you've escaped the ${currentDifficulty} maze!\nYour ${currentDifficulty} score is now: ${currentScore + 1}`);
+        
+        gameScreen.style.display = 'none';
+        homeScreen.style.display = 'flex';
+        clearInterval(monsterInterval);
+    }
+}
