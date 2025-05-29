@@ -100,3 +100,102 @@ canvas {
     background-color: white;
     border-radius: 8px;
 }
+
+#regenerateMaze3:hover {
+    cursor: pointer;
+    background-color: #ececec;
+}
+
+#regenerateMaze4 {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#regenerateMaze4:hover {
+    cursor: pointer;
+    background-color: #ececec;
+}
+
+#aboutGame {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#aboutGame:hover {
+    cursor: pointer;
+    background-color: #ececec;
+}
+
+header h1 {
+    margin: 0;
+    padding: 10px;
+    color: #fff;
+    font-size: 2.5em;
+}
+
+header h2 {
+    margin-top: 5px;
+    font-size: 1.5em;
+    color: #fff;
+}
+
+#moveUp {
+    margin-left: -5px;
+}
+
+#moveUp, #moveDown, #moveLeft, #moveRight {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#moveUp:hover, #moveDown:hover, #moveLeft:hover, #moveRight:hover {
+    cursor: pointer;
+    background-color: #ececec;
+    border-radius: 8px;
+}
+
+.home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.difficulty-buttons {
+    margin: 20px 0;
+}
+
+.difficulty-btn {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.difficulty-btn:hover {
+    background-color: #45a049;
+}
+
+.difficulty-btn[data-level="easy"] {
+    background-color: #4CAF50;
+}
+
+.difficulty-btn[data-level="medium"] {
+    background-color: #FFC107;
+    color: #333;
+}
