@@ -339,3 +339,78 @@ function checkWin() {
         clearInterval(monsterInterval);
     }
 }
+// Update score display
+function updateScoreDisplay() {
+    const easy = parseInt(localStorage.getItem('score_easy')) || 0;
+    const medium = parseInt(localStorage.getItem('score_medium')) || 0;
+    const hard = parseInt(localStorage.getItem('score_hard')) || 0;
+
+    const total = easy + medium + hard;
+
+    document.getElementById('scoreEasy').textContent = `Easy Score: ${easy}`;
+    document.getElementById('scoreMedium').textContent = `Medium Score: ${medium}`;
+    document.getElementById('scoreHard').textContent = `Hard Score: ${hard}`;
+
+    // Update lifetime score di home dan game screen
+    const lifetimeScoreEls = document.querySelectorAll('#lifetimeScore, #gameLifetimeScore');
+    lifetimeScoreEls.forEach(el => el.textContent = `Lifetime Score: ${total}`);
+}
+
+
+// Event listeners for difficulty selection
+difficultyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        currentDifficulty = button.dataset.level;
+        currentDifficultyDisplay.textContent = `Difficulty: ${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}`;
+        startGame();
+    });
+});
+
+// Back to home button
+backToHomeBtn.addEventListener('click', () => {
+    gameScreen.style.display = 'none';
+    homeScreen.style.display = 'flex';
+    clearInterval(monsterInterval);
+});
+
+
+// Regenerate maze button
+document.getElementById('regenerateMaze').addEventListener('click', () => {
+    const currentScore = localStorage.getItem('lifetimeScore') ? parseInt(localStorage.getItem('lifetimeScore')) : 0;
+    localStorage.setItem('lifetimeScore', Math.max(0, currentScore - 1));
+    updateScoreDisplay();
+    initGame();
+});
+
+// Keyboard controls
+window.addEventListener('keydown', (e) => {
+    switch(e.key) {
+        case 'ArrowUp':
+            movePlayer(0, -1);
+            e.preventDefault();
+            break;
+        case 'ArrowDown':
+            movePlayer(0, 1);
+            e.preventDefault();
+            break;
+        case 'ArrowLeft':
+            movePlayer(-1, 0);
+            e.preventDefault();
+            break;
+        case 'ArrowRight':
+            movePlayer(1, 0);
+            e.preventDefault();
+            break;
+    }
+});
+
+// Button controls
+document.getElementById('moveUp').addEventListener('click', () => movePlayer(0, -1));
+document.getElementById('moveDown').addEventListener('click', () => movePlayer(0, 1));
+document.getElementById('moveLeft').addEventListener('click', () => movePlayer(-1, 0));
+document.getElementById('moveRight').addEventListener('click', () => movePlayer(1, 0));
+
+// Initialize score display
+document.addEventListener("DOMContentLoaded", () => {
+    updateScoreDisplay();
+});
